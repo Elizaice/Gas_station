@@ -4,17 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.imooc.demo2.MainActivity"
-    tools:ignore="MergeRootFrame" >
+    android:orientation="vertical">
 
     <AutoCompleteTextView
-        android:completionThreshold="3"
         android:id="@+id/autoCompleteTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入要搜索的关键词" >
-
-        <requestFocus />
-    </AutoCompleteTextView>
+        android:completionThreshold="3"
+        android:ems="10"
+        android:hint="请输入要搜索的关键词" />
+     
+     
+     <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入你的收件人" />
 
 </LinearLayout>
 
