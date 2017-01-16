@@ -22,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         /*
          * 第一步：初始化控件
-         * 第二步：需要一个适配器（匹配输入内容）
+         * 第二步：需要一个适配器（用这个适配器匹配输入内容）
          * 第三步，初始化数据源--这数据源去匹配文本框输入的内容
          * 第四步：将adepter与当前AutoCompleteTextView控件绑定
          */
