@@ -15,7 +15,7 @@ import android.os.Build;
 
 public class MainActivity extends ActionBarActivity {
 	private AutoCompleteTextView acTextView;
-	private String[] res = {"beijing1","beijing2","beijing3","shanghai1","shanghai2"};
+	private String[] res = {"beijing1","beijing2","beijing3","shanghai1","shanghai2","android"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
