@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type = "text/javascript" src = "jquery-3.2.0.min.js"></script>
+<script type = "text/javascript" src = "json2.js"></script>
+</head>
+<body>
+<div style="height:30px;width:30px;position:absolute;">
+<img src = "bluecar.png"width = "40px" height = "30px">
+</div>
+<div id = "painting" style = "float:left">
+<canvas id = "myCanvas" width = "1600" height = "1600"></canvas>
+  <p id = "demo"></p>
+<script type="text/javascript">
+var array = new Array();
+var cur_point = new Array(2);			//当前车点坐标
+var gas_number;
+var flag_go = 0;
+//邻接矩阵
+ /* var GasPoint = new Array();
+  for( var k = 0 ; k < 17 ; k++){
+   GasPoint[k] = new Array();
+    for(var j = 0 ; j < 17 ;j++){
+     GasPoint[k][j] = Number.MAX_VALUE;
+      if(k==j)
+     GasPoint[k][j] = 0;
+    }
+  }
+ GasPoint[0][1] = 1;  GasPoint[0][2] = 1;  GasPoint[0][10] =1;
+ GasPoint[1][0] = 1;  GasPoint[1][11] =1; 
+ GasPoint[2][0] = 1;  GasPoint[2][10] =1;
+ GasPoint[3][10] =1; GasPoint[3][12] = 1;
+ GasPoint[4][11] = 1;  GasPoint[4][14] = 1;
+ GasPoint[5][11] = 1;  GasPoint[5][12] = 1;
+ GasPoint[6][12] = 1;  GasPoint[6][14] = 1;
+ GasPoint[7][13] = 1;  GasPoint[7][14] = 1;
+ GasPoint[8][14] = 1;  GasPoint[8][16] = 1;
+ GasPoint[9][15] = 1;  GasPoint[9][16] = 1;
+ GasPoint[10][0] = 1; GasPoint[10][2] = 1; GasPoint[10][3] = 1;GasPoint[10][11] = 1;
+ GasPoint[11][1] = 1; GasPoint[11][4] = 1; GasPoint[11][5] = 1; GasPoint[11][10] = 1;GasPoint[11][12] = 1;
+ GasPoint[12][3] = 1; GasPoint[12][5] = 1; GasPoint[12][6] = 1; GasPoint[12][11] = 1; GasPoint[12][13] = 1;
+ GasPoint[13][7] = 1;  GasPoint[13][12] = 1;GasPoint[13][14] = 1;
+ GasPoint[14][4] = 1; GasPoint[14][6] = 1; GasPoint[14][7] = 1; GasPoint[14][8] = 1; GasPoint[14][13] = 1;GasPoint[14][15] = 1;
+ GasPoint[15][9] = 1;  GasPoint[15][14] = 1;GasPoint[15][16] = 1;                                                                                              
+ GasPoint[16][8] = 1; GasPoint[16][9] = 1; GasPoint[16][15] = 1;
+
+  //点坐标，点名
+ var point = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+ point[0]['x'] = 0;   point[0]['y'] = 0;   point[0]['name'] = 'V0';
+ point[1]['x'] = 100; point[1]['y'] = 150; point[1]['name'] = 'V1';
+ point[2]['x'] = 200; point[2]['y'] = 0;   point[2]['name'] = 'V2';
+ point[3]['x'] = 400; point[3]['y'] = 200; point[3]['name'] = 'V3';
+ point[4]['x'] = 450; point[4]['y'] = 650; point[4]['name'] = 'V4';  
+ point[5]['x'] = 550; point[5]['y'] = 300; point[5]['name'] = 'V5';
+ point[6]['x'] = 800; point[6]['y'] = 420; point[6]['name'] = 'V6';
+ point[7]['x'] = 800; point[7]['y'] = 1200;point[7]['name'] = 'V7';
+ point[8]['x'] = 1300;point[8]['y'] = 700; point[8]['name'] = 'V8';
+ point[9]['x'] = 1200;point[9]['y'] = 1500;point[9]['name'] = 'V9';
+ point[10]['x']= 200; point[10]['y']= 200; point[10]['name']= 'V10';
+ point[11]['x']= 400; point[11]['y']= 400; point[11]['name']= 'V11';
+ point[12]['x']= 600; point[12]['y']= 600; point[12]['name']= 'V12';
+ point[13]['x']= 800; point[13]['y']= 800; point[13]['name']= 'V13';
+ point[14]['x']=1000;point[14]['y']= 1000; point[14]['name']= 'V14';
+ point[15]['x']=1200;point[15]['y']= 1200; point[15]['name']= 'V15';
+ point[16]['x']=1500;point[16]['y']= 1500; point[16]['name']= 'V16';*/
+ var GasPoint = new Array();
+ for( var k = 0 ; k < 40 ; k++){
+  GasPoint[k] = new Array();
+   for(var j = 0 ; j < 40 ;j++){
+    GasPoint[k][j] = Number.MAX_VALUE;
+     if(k==j)
+    GasPoint[k][j] = 0;
+   }
+ }
+
+GasPoint[0][30] = 1;  GasPoint[0][32] =1; 
+GasPoint[1][30] = 1;  GasPoint[1][31] =1;
+GasPoint[2][31] =1;   GasPoint[2][33] = 1;
+GasPoint[3][32] = 1;  GasPoint[3][35] = 1;
+GasPoint[4][32] = 1;  GasPoint[4][33] = 1;
+GasPoint[5][33] = 1;  GasPoint[5][35] = 1;
+GasPoint[6][34] = 1;  GasPoint[6][35] = 1;
+GasPoint[7][35] = 1;  GasPoint[7][37] = 1;
+GasPoint[8][36] = 1;  GasPoint[8][37] = 1;
+GasPoint[9][31] = 1; GasPoint[9][32] = 1;
+GasPoint[10][31] = 1; GasPoint[10][33] = 1;
+GasPoint[11][30] = 1; GasPoint[11][32] = 1;
+GasPoint[12][31] = 1; GasPoint[12][32] = 1;GasPoint[12][33] = 1;
+GasPoint[13][33] = 1;
+GasPoint[14][33] = 1; GasPoint[14][34] =1;
+GasPoint[15][38] =1;GasPoint[15][39] =1;
+GasPoint[16][34] =1;
+GasPoint[17][32] =1; GasPoint[17][34] =1;
+GasPoint[18][33] =1;GasPoint[18][35] =1;
+GasPoint[19][37] = 1;GasPoint[19][38] = 1;
+GasPoint[20][34] =1; GasPoint[20][35] = 1;
+GasPoint[21][34] =1;GasPoint[21][36] = 1;
+GasPoint[22][35] = 1;
+GasPoint[23][35] =1 ;GasPoint[23][36] = 1;
+GasPoint[24][36] = 1;
+GasPoint[25][36] =1; GasPoint[25][37] = 1;
+GasPoint[26][34] =1;GasPoint[26][37] = 1;
+GasPoint[27][36] = 1;GasPoint[27][38] = 1;
+GasPoint[28][37] = 1; GasPoint[28][39] = 1;
+GasPoint[29][35] = 1; GasPoint[29][37] = 1;
+
+GasPoint[30][0] = 1;  GasPoint[30][1] = 1;  GasPoint[30][31] =1;GasPoint[30][11] =1;
+
+GasPoint[31][30] = 1; GasPoint[31][1] = 1; GasPoint[31][2] = 1;GasPoint[31][32] = 1;GasPoint[31][9] = 1; GasPoint[31][10] = 1;GasPoint[31][12] = 1;
+
+GasPoint[32][0] = 1;  GasPoint[32][3] = 1; GasPoint[32][4] = 1; GasPoint[32][31] = 1;GasPoint[32][33] = 1;GasPoint[32][9] = 1;GasPoint[32][11] = 1;
+GasPoint[32][12] = 1; GasPoint[32][17] =1;
+
+GasPoint[33][2] = 1;  GasPoint[33][4] = 1; GasPoint[33][5] = 1; GasPoint[33][32] = 1; GasPoint[33][34] = 1;GasPoint[33][10] = 1;GasPoint[33][12] = 1;
+GasPoint[33][13] = 1; GasPoint[33][14] =1;GasPoint[33][18] = 1;
+
+GasPoint[34][6] = 1;  GasPoint[34][33] = 1;GasPoint[34][35] = 1;GasPoint[34][14] = 1;GasPoint[34][16] =1;GasPoint[34][17]=1;GasPoint[34][20] =1;
+GasPoint[34][21] = 1;GasPoint[34][26] = 1;
+
+GasPoint[35][3] = 1;  GasPoint[35][5] = 1; GasPoint[35][6] = 1; GasPoint[14][7] = 1; GasPoint[35][34] = 1;GasPoint[35][36] = 1;GasPoint[35][18] =1;
+GasPoint[35][20] = 1;GasPoint[35][22] = 1;GasPoint[35][23] = 1;GasPoint[35][29] = 1;
+
+GasPoint[36][8] = 1;  GasPoint[36][35] = 1;GasPoint[36][37] = 1; GasPoint[36][21] = 1;GasPoint[36][23] =1;GasPoint[36][24] = 1;GasPoint[36][25] =1;
+GasPoint[36][27] = 1;
+
+GasPoint[37][7] = 1;  GasPoint[37][8] = 1; GasPoint[37][36] = 1;GasPoint[37][38] = 1;GasPoint[37][19] =1;GasPoint[37][25] = 1;GasPoint[37][26] = 1;
+GasPoint[37][28] =1;GasPoint[37][29] = 1;
+
+GasPoint[38][37] = 1;GasPoint[38][39] = 1;GasPoint[38][15] =1;GasPoint[38][19] =1;GasPoint[38][27] = 1;
+
+GasPoint[39][38] = 1;GasPoint[39][15] = 1;GasPoint[39][28] = 1;
+ //点坐标，点名
+//var point = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]];
+var point = new Array();
+for(var i = 0 ; i < GasPoint.length ; i++){
+	point[i] = new Array();
+}
+point[0]['x'] = 100; point[0]['y'] = 150; point[0]['name'] = 'V0';
+point[1]['x'] = 200; point[1]['y'] = 0;   point[1]['name'] = 'V1';
+point[2]['x'] = 400; point[2]['y'] = 200; point[2]['name'] = 'V2';
+point[3]['x'] = 450; point[3]['y'] = 650; point[3]['name'] = 'V3';  
+point[4]['x'] = 550; point[4]['y'] = 300; point[4]['name'] = 'V4';
+point[5]['x'] = 800; point[5]['y'] = 420; point[5]['name'] = 'V5';
+point[6]['x'] = 800; point[6]['y'] = 1200;point[6]['name'] = 'V6';
+point[7]['x'] = 1300;point[7]['y'] = 700; point[7]['name'] = 'V7';
+point[8]['x'] = 1200;point[8]['y'] = 1500;point[8]['name'] = 'V8';
+point[9]['x'] = 160; point[9]['y'] = 280;  point[9]['name']= 'V9';
+point[10]['x'] = 370; point[10]['y'] = 250; point[10]['name']= 'V10';
+point[11]['x'] = 240; point[11]['y'] = 360; point[11]['name']= 'V11';
+point[12]['x'] = 440; point[12]['y'] = 310;  point[12]['name']= 'V12';
+point[13]['x'] = 400; point[13]['y'] = 500;  point[13]['name']= 'V13';
+point[14]['x'] = 390; point[14]['y'] = 550;  point[14]['name']= 'V14';
+point[15]['x'] = 1070; point[15]['y'] = 1450;  point[15]['name']= 'V15';
+point[16]['x'] = 660; point[16]['y'] = 580;  point[16]['name']= 'V16';
+point[17]['x'] = 570; point[17]['y'] = 460;  point[17]['name']= 'V17';
+point[18]['x'] = 690; point[18]['y'] = 480;  point[18]['name']= 'V18';
+point[19]['x'] = 1080; point[19]['y'] = 1280;  point[19]['name']= 'V19';
+point[20]['x'] = 450; point[20]['y'] = 780;  point[20]['name']= 'V20';
+point[21]['x'] = 790; point[21]['y'] = 650;  point[21]['name']= 'V21';
+point[22]['x'] = 760; point[22]['y'] = 860;  point[22]['name']= 'V22';
+point[23]['x'] = 1110; point[23]['y'] = 890;  point[23]['name']= 'V23';
+point[24]['x'] = 950; point[24]['y'] = 970;  point[24]['name']= 'V24';
+point[25]['x'] = 1010; point[25]['y'] =850;  point[25]['name']= 'V25';
+point[26]['x'] = 1100; point[26]['y'] = 760;  point[26]['name']= 'V26';
+point[27]['x'] = 1250; point[27]['y'] = 930;  point[27]['name']= 'V27';
+point[28]['x'] = 1300; point[28]['y'] = 980;  point[28]['name']= 'V28';
+point[29]['x'] =750; point[29]['y'] = 950;  point[29]['name']= 'V29';
+
+point[30]['x'] = 0;   point[30]['y'] = 0; point[30]['name'] = 'V30';
+point[31]['x']= 200; point[31]['y']= 200; point[31]['name']= 'V31';
+point[32]['x']= 300; point[32]['y']= 300; point[32]['name']= 'V32';
+point[33]['x']= 500; point[33]['y']= 500; point[33]['name']= 'V33';
+point[34]['x']= 650; point[34]['y']= 650; point[34]['name']= 'V34';
+point[35]['x']=850;point[35]['y']= 850; point[35]['name']= 'V35';
+point[36]['x']=1000;point[36]['y']= 1000; point[36]['name']= 'V36';
+point[37]['x']=1150;point[37]['y']=1150;  point[37]['name'] = 'V37';
+point[38]['x']=1300;point[38]['y']= 1300; point[38]['name']= 'V38';
+point[39]['x']=1500;point[39]['y']=1500;  point[39]['name']= 'V39';
+ 
+ var Point = new Array();
+ for(var i = 0 ; i < GasPoint.length ; i++){
+	 Point[i] = new Array();
+	
+		 Point[i][0] = point[i]['x'];
+		 Point[i][1] = point[i]['y'];
+ }
+ 
+  for(var i = 0 ; i <GasPoint.length ; i ++){
+    for(var j = 0 ; j <GasPoint.length ; j ++){
+      if(GasPoint[i][j]!=Number.MAX_VALUE&&GasPoint[i][j]!=0)
+      {
+       GasPoint[i][j] = Math.sqrt(Math.pow(Math.abs(point[i]['x']-point[j]['x']),2)+Math.pow(Math.abs(point[i]['y']-point[j]['y']),2));
+      }
+        
+    }
+  }
+  var c = document.getElementById('myCanvas');
+  var ctx = c.getContext('2d');
+  ctx.translate(20,20);
+  //划线
+ function paint(){
+	 ctx.clearRect(-20,-20,1600,1600);
+	 for(var x = 30,pointsLen = point.length; x < pointsLen;x++){
+			value = point[x];
+			i = x+1;
+			ctx.strokeStyle = 'black';
+			while(i<pointsLen){
+				  if(GasPoint[i][x]!=Number.MAX_VALUE){
+				        ctx.beginPath();  
+				        ctx.lineWidth = 3;
+				        ctx.moveTo(value['x'] , value['y']);  
+				        ctx.lineTo(point[i]['x'],  point[i]['y']);  
+				        ctx.stroke();   
+				      }
+				        i++;
+			}
+		}
+	 for(var x=0,pointsLen=point.length;x<pointsLen;x++){  
+		    value = point[x];  
+		    i = x +1;  
+		    ctx.strokeStyle='black';  
+		 /*   while (i<pointsLen) {  
+		      if(GasPoint[i][x]!=Number.MAX_VALUE){
+		        ctx.beginPath();  
+		        ctx.lineWidth = 3;
+		        ctx.moveTo(value['x'] , value['y']);  
+		        ctx.lineTo(point[i]['x'],  point[i]['y']);  
+		        ctx.stroke();   
+		      }
+		        i++;
+		    }*/
+		    //画点名
+		    ctx.beginPath();  
+		    ctx.fillStyle ='black';  
+		    ctx.fillText(value.name, value['x']+20, value['y']);  
+		    //画点  
+		    ctx.fillStyle = 'rgb(29,143,254)';  
+		    ctx.beginPath();  
+		    ctx.arc(value['x'] , value['y'] , 5, 0, Math.PI*2, false);  
+		    ctx.fill();    
+		  }
+  }
+  var pointJson = JSON.stringify(Point);
+  $(function(){
+	  $("#go").click(function(){
+		  $.ajax({
+			  type:'post',
+			  contextType:'application/json;charset = utf-8',
+			  url:'http://localhost:8080/knnSample/recPoint.action',
+			  dataType:"json",
+			  data:{pointJson:pointJson},
+			  success:function(data){
+			  }
+		  });
+	  });
+  });
+
+  //从后端获取路段，距离
+  function search(){
+	paint();
+	  $.ajax({
+		  type:'get',
+		  url:'http://localhost:8080/knnSample/sendJson.action',
+		  dataType:'json',
+		  data:{},
+		 // data:"{\"path1\":\""+mypath.get(0)+"\",\"path2\":\""+mypath.get(1)+"\",\"predist\":\""+predist+"\"}",
+		 //data:{"path1":mypath.get(0),"path2":mypath.get(1),"predist":predist},
+		 success:function(data){
+			
+			  console.log("接收路段距离成功"+data.result);
+			  array = eval(data.result);
+			  flag();
+			  print();
+			  for(var i = 0 ; i < point.length ; i++){
+				  //k+3
+				  var count = 0;
+				  for(var j = 2 ; j < 2+parseInt(flag_go)*3; j+=3){
+					  ctx.fillStyle = 'yellow';
+					  ctx.beginPath();  
+					  ctx.arc(point[array[j]]['x'] ,point[array[j]]['y'] , 10, 0, Math.PI*2, false);  
+					  ctx.fill(); 
+					  ctx.font = "bold 6pt Arial";
+					  ctx.fillStyle = 'black';
+					  ctx.textAlign = 'center';
+					  ctx.textBaseline = 'middle';
+					  ctx.moveTo(point[array[j]]['x'] ,point[array[j]]['y']);
+					  ctx.fillText(count++,point[array[j]]['x'] ,point[array[j]]['y']);
+				  }
+			  }
+			  cur_point[0] = array[0];
+			  cur_point[1] = array[1];
+				$(document).ready(function(){
+					 
+				    $("div").animate({left:cur_point[0]+20,top:cur_point[1]+20},2000);
+				 
+				});
+		  }
+	  });  
+	  gpsfunction();
+  }
+ 
+setInterval(search,2000);
+	var ifornot = 1;
+	//发给后端是否去加油站
+	//发送给后端去几个加油站
+	$(function(){
+		  $("#gas").click(function(){
+			  $.ajax({
+					type:'post',
+					contextType:'application/json;charset = utf-8',
+					url: 'http://localhost:8080/knnSample/inputIfornot.action',
+					dataType:"json",
+					data:{'ifornot': ifornot},
+					success:function(data){					
+						gas_number = prompt("您选择的加油站编号为：");
+						sendGas();
+					}
+				});
+		  });
+		 
+	  });
+	
+		function flag(){
+			if(document.getElementById("kgas").value=="")
+				flag_go = 3;
+			else flag_go = document.getElementById("kgas").value;
+			  $.ajax({
+					type:'post',
+					contextType:'application/json;charset = utf-8',
+					url: 'http://localhost:8080/knnSample/gas.action',
+					dataType:"json",
+					data:{'flag_go': flag_go},
+					success:function(data){
+						
+					//	gas_number = prompt("您可以选择最近的三个加油站为："+array[3]+","+array[4]+","+array[5]+"\n"+"您选择的加油站编号为：");
+						//alert("您选择的加油站是："+gas_number);
+					//	sendGas();
+					}
+				});
+		}
+	  //发给后端加油站编号
+	  function sendGas(){
+		  $.ajax({
+				type:'post',
+				contextType:'application/json;charset = utf-8',
+				url: 'http://localhost:8080/knnSample/receive.action',
+				dataType:"json",
+				data:{'gas_number':gas_number},
+				success:function(data){
+					 
+				}
+			});
+	  }
+	  //从后端获取路线
+	  var gpspath = new Array();
+	  var path = new Array();
+	 $(function(){
+		  $("#gps").click(function(){
+			  $.ajax({
+					type:'post',
+					contextType:'application/json;charset = utf-8',
+					url: 'http://localhost:8080/knnSample/sendGps.action',
+					dataType:"json",
+					data:{},
+					success:function(data){
+						console.log("接收路线成功"+data.result);
+						 gpspath = eval(data.result);
+						 gpsfunction();
+					}
+				});
+		  });
+	  });
+	 
+	  //划线
+	  
+	
+	  
+	  function gpsfunction(){
+		  for(var i = 0 ; i < gpspath.length ; i++){
+			  path[i] = new Array();
+			  
+		  }
+		  for(var i = 0 ; i < GasPoint.length ; i++)
+		  {
+		  		for(var j = 0 ; j < gpspath.length ; j++){	
+		  			if('V'+gpspath[j] == point[i]['name']){
+		  				path[j][0] = point[i]['x'];
+		  				path[j][1] = point[i]['y'];
+						console.log(path[j][0]+" "+path[j][1]);
+		  			}
+		  		}
+		  }
+		  var k = 0;
+		  for(var i = 0 ; i < path.length ; i++){
+			  console.log("path:"+path[i][0]+" "+path[i][1]);
+		  }
+		while(k < gpspath.length-1)
+		{
+			value = path[k];
+			var i = k+1;
+			ctx.strokeStyle = 'red';
+			ctx.beginPath();
+			ctx.lineWidth = 5;
+			ctx.moveTo(value[0],value[1]);
+			ctx.lineTo(path[i][0],path[i][1]);
+			//ctx.lineTo(450,500);
+			ctx.stroke();
+			k++;
+		}
+	}
+	  
+	  function print(){
+			 console.log(flag_go);
+		
+			 var str= '';
+			 str += "<table>";
+			 str+= "<tr><th>加油站编号</th><th>石油公司</th><th>价格</th></tr>";
+			 for(var i = 0 ; i<3*parseInt(flag_go) ; i+=3){
+			 str+='<tr>';
+				
+					  var tds ='<td>'+array[i+2]+'</td>';
+					
+					 str+=tds;
+					 tds = '<td>'+array[i+3]+'</td>';
+					 str+=tds;
+					 tds = '<td>'+array[i+4]+'</td>';
+					 str+=tds;
+				 str+='<tr>';
+				
+			 }
+			 str += '</table>';
+			 $('#divId').html(str);
+		  }
+	 
+		  
+		  function oneToTwo() {
+			  v = $("#select-option-one").val();	
+			  //先清空上一次加载的内容
+			  $("[name='select-option-two-option']").remove();
+			  //以下是例子的数据	
+			  var arr = new Array(3,4,5);
+			  var name = new Array("中国石油","中国石化","其他");
+			  var array = new Array(6,7,8,9);
+			  var price = new Array("6.0元/升以下","6.0-6.5元/升","6.5-7.0元/升","7.0元/升以上");
+			  //拼接的html
+			  var parent = document.getElementById("select-option-one");
+			  var p_value = parent.value;
+			  if(p_value == 1){
+			  	var str = "";
+			  	for (var i = 0; i < arr.length; i++) {
+
+			  	str = str
+			  	+ "<option name='select-option-two-option' value='"+arr[i]+"'>"
+			  	+ name[i] + "</option>";
+
+			  	}
+			  	//为第二级select添加内容
+			  	$("#select-option-two").append(str);
+			  	}
+			  else if(p_value ==2){
+			  	var str = "";
+			  	for (var i = 0; i < array.length; i++) {
+
+			  	str = str
+			  	+ "<option name='select-option-two-option' value='"+array[i]+"'>"
+			  	+ price[i] + "</option>";
+
+			  	}
+
+			  	//为第二级select添加内容
+			  	$("#select-option-two").append(str);
+			  }
+		  }
+		  $(function(){
+			  $("#sure").click(function(){
+				  var value = $("#select-option-two").val();
+				  console.log("value "+value);
+				  $.ajax({
+						type:'post',
+						contextType:'application/json;charset = utf-8',
+						url: 'http://localhost:8080/knnSample/receiveVal.action',
+						dataType:"json",
+						data:{'value':value},
+						success:function(data){
+							 
+						}
+					});
+			  });
+			 
+		  });
+</script>
+</div>
+<div id = "menu" style = "float:right">
+<button id = "go">开始行程</button>
+ <button id = "gas">去加油站</button>
+<button id = "gps">开始导航</button>
+<br>显示几个加油站：<br>
+<input type = "text" id = "kgas"/>
+<div id='divId'></div>
+
+<select id="select-option-one" onchange="oneToTwo();">
+<option>---请选择---</option>
+<option value='1'>按照公司筛选</option>
+<option value="2">按照价格筛选</option>
+
+</select><select id="select-option-two">
+<option>---请选择---</option>
+</select>
+<button id = "sure">确定</button>
+
+
+</div>
+</body>
+</html>
