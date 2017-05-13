@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+ 
+  <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+  <constant name="struts.devMode" value="false" />
+  <package name="default" namespace = "/" extends="json-default" strict-method-invocation="true">
+ 
+   <action name = "jsonAction" class = "com.action.JsonAction" method = "testJson">
+   	<result type = "json"></result>
+   </action> 
+   
+   <action name = "sendJson" class = "com.action.JsonAction" method = "sendJson">
+   <result  type ="json"></result>
+   </action>
+   
+   <action name = "sendGps" class = "com.action.JsonAction" method = "sendGps">
+   <result type = "json"></result>
+   </action>
+   
+   <action name = "gas" class = "com.action.JsonAction" method = "inputFlag_go">
+   <result type = "json" ></result>
+   </action>
+   
+   <action name = "receive" class = "com.action.JsonAction" method = "receiveGas">
+   <result type = "json"></result>
+   </action>
+   
+   <action name = "recPoint" class = "com.action.JsonAction" method = "receivePoint">
+   <result type = "json"></result>
+   </action>
+   
+   <action name = "receiveVal" class = "com.action.JsonAction" method = "receiveVal">
+   <result type = "json"></result>
+   </action>
+   
+     <action name = "inputIfornot" class = "com.action.JsonAction" method = "inputIfornot">
+   <result type = "json"></result>
+   </action>
+  </package>
+</struts>
